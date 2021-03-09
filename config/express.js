@@ -1,8 +1,10 @@
-var express = require("express"),
+var config = require("./config"),
+  express = require("express"),
   morgan = require("morgan"),
   compress = require("compression"),
   bodyParser = require("body-parser"),
-  methodOverride = require("method-override");
+  methodOverride = require("method-override"),
+  session = require("express-session");
 
 module.exports = function () {
   const app = express();
@@ -17,6 +19,13 @@ module.exports = function () {
   app.use(bodyParser.json());
   app.use(methodOverride());
 
+  app.use(
+    session({
+      saveUninitialized: true,
+      resave: true,
+      secret: config.sessionSecret
+    })
+  );
   // 将 EJS 设置为默认的模板引擎
   app.set("views", "./app/views");
   app.set("view engine", "ejs");
