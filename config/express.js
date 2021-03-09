@@ -17,6 +17,10 @@ module.exports = function () {
   app.use(bodyParser.json());
   app.use(methodOverride());
 
+  // 将 EJS 设置为默认的模板引擎
+  app.set("views", "./app/views");
+  app.set("view engine", "ejs");
+
   require("../app/routes/index.server.routes")(app);
   return app;
 };
