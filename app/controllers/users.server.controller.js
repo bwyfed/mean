@@ -40,7 +40,10 @@ exports.userByID = function (req, res, next, id) {
 };
 
 exports.update = function (req, res, next) {
+  console.log("update");
   User.findByIdAndUpdate(req.user.id, req.body, function (err, user) {
+    console.log("updated result");
+    console.log(user);
     if (err) {
       return next(err);
     } else {
