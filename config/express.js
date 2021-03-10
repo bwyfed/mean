@@ -31,6 +31,7 @@ module.exports = function () {
   app.set("view engine", "ejs");
 
   require("../app/routes/index.server.routes")(app);
+  require("../app/routes/users.server.routes")(app);
   // 实现静态文件服务
   app.use(express.static("./public"));
   return app;
