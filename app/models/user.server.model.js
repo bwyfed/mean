@@ -55,4 +55,12 @@ UserSchema.virtual("fullName")
   });
 UserSchema.set("toJSON", { getters: true, virtuals: true });
 
+// 自定义静态方法
+UserSchema.statics.findOneByUsername = function (username, callback) {
+  this.findOne({ username: new RegExp(username, "i") }, callback);
+};
+// 自定义实例方法
+UserSchema.methods.authenticate = function (password) {
+  return this.password === password;
+};
 mongoose.model("User", UserSchema);
