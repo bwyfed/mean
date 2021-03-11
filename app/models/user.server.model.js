@@ -4,10 +4,14 @@ const mongoose = require("mongoose"),
 const UserSchema = new Schema({
   firstName: String,
   lastName: String,
-  email: String,
+  email: {
+    type: String,
+    index: true
+  },
   username: {
     type: String,
-    trim: true
+    trim: true,
+    unique: true
   },
   password: String,
   created: {
