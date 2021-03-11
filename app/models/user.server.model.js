@@ -77,4 +77,20 @@ UserSchema.statics.findOneByUsername = function (username, callback) {
 UserSchema.methods.authenticate = function (password) {
   return this.password === password;
 };
+
+// 预处理中间件
+UserSchema.pre("save", function (next) {
+  if (process.env.NODE_ENV === "development") {
+    next();
+  } else {
+    next(new Error("An Error Occurred."));
+  }
+});
+UserSchema.post("save", function (next) {
+  if (this.isNew) {
+    console.log("A new user was created.");
+  } else {
+    console.log("A user updated is details");
+  }
+});
 mongoose.model("User", UserSchema);
