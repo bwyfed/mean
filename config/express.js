@@ -1,15 +1,20 @@
 var config = require("./config"),
+  http = require("http"),
+  socketio = require("socket.io"),
   express = require("express"),
   morgan = require("morgan"),
   compress = require("compression"),
   bodyParser = require("body-parser"),
   methodOverride = require("method-override"),
   session = require("express-session"),
+  MongoStore = require("connect-mongo"),
   flash = require("connect-flash"),
   passport = require("passport");
 
-module.exports = function () {
+module.exports = function (db) {
   const app = express();
+  const server = http.createServer(app);
+  const io = socketio(server);
 
   if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -21,11 +26,14 @@ module.exports = function () {
   app.use(bodyParser.json());
   app.use(methodOverride());
 
+  const mongoStore = MongoStore.create({ mongoUrl: config.db });
+
   app.use(
     session({
       saveUninitialized: true,
       resave: true,
-      secret: config.sessionSecret
+      secret: config.sessionSecret,
+      store: mongoStore
     })
   );
 
@@ -40,5 +48,8 @@ module.exports = function () {
   require("../app/routes/users.server.routes")(app);
   // 实现静态文件服务
   app.use(express.static("./public"));
-  return app;
+
+  // 配置socket.io模块
+  require("./socketio")(server, io, mongoStore);
+  return server;
 };

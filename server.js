@@ -8,7 +8,7 @@ const mongoose = require("./config/mongoose"),
 const db = mongoose();
 
 // Create a new Express application instance
-const app = express();
+const app = express(db);
 
 // Configure the Passport middleware
 const passport = Passport();
